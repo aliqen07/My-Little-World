@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Little World ♡</title>
+  <style>
+    :root {
+      --pink: #f5dce5;
+      --rose: #b76e8b;
+      --cream: #fffaf6;
+      --ink: #604858;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+    }
+
+    header {
+      padding: 25px 20px;
+      text-align: center;
+      background: var(--pink);
+    }
+
+    header h1 {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: clamp(30px, 6vw, 46px);
+    }
+
+    header p { margin-bottom: 0; }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    button, input, textarea {
+      font: inherit;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    button {
+      border: 0;
+      background: var(--rose);
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover { opacity: .85; }
+
+    .soft-button {
+      background: var(--pink);
+      color: var(--ink);
+    }
+
+    main {
+      width: min(760px, 92%);
+      margin: 10px auto 45px;
+    }
+
+    .welcome, .panel, .word-card {
+      background: var(--white);
+      border: 1px solid #f0e3e8;
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 5px 18px #8d65700b;
+    }
+
+    .welcome {
+      background: linear-gradient(135deg, #fff0f4, #fffaf2);
+      text-align: center;
+      padding: 32px 20px;
+    }
+
+    h2 { font-family: Georgia, serif; }
+
+    .muted { color: #927b89; }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .stat {
+      background: white;
+      padding: 13px 18px;
+      border-radius: 15px;
+    }
+
+    form {
+      display: grid;
+      gap: 10px;
+    }
+
+    input, textarea {
+      width: 100%;
+      border: 1px solid #e9d6df;
+      background: #fffdfd;
+      color: var(--ink);
+    }
+
+    textarea { resize: vertical; }
+
+    .search { margin-bottom: 15px; }
+
+    .word-card h3 {
+      font-size: 25px;
+      margin: 0 0 8px;
+    }
+
+    .meaning {
+      background: #fff4f7;
+      border-radius: 12px;
+      padding: 13px;
+      margin: 12px 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .actions button { font-size: 14px; }
+
+    .empty {
+      text-align: center;
+      padding: 25px 10px;
+      color: #927b89;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #927b89;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Little World ♡</h1>
+    <p>a little space to learn and grow 🌷</p>
+  </header>
+
+  <nav>
+    <button onclick="showSection('home')">♡ Ana sayfa</button>
+    <button onclick="showSection('add')">＋ Kelime ekle</button>
+    <button onclick="showSection('words')">✿ Kelimelerim</button>
+    <button onclick="studyRandom()">♡ Kendimi test et</button>
+  </nav>
+
+  <main>
+    <section id="home">
+      <div class="welcome">
+        <div style="font-size:42px">🌸 📖 🌷</div>
+        <h2>Welcome to my little corner!</h2>
+        <p class="muted">
+          Her gün yeni bir kelime, kendin için küçük bir adım.
+        </p>
+        <div class="stats">
+          <div class="stat">
+            <strong id="total">0</strong><br>
+            <small>Kelime</small>
+          </div>
+          <div class="stat">
+            <strong id="learned">0</strong><br>
+            <small>Öğrendim</small>
+          </div>
+        </div>
+        <p style="margin-top:22px">
+          <button onclick="showSection('add')">İlk kelimemi ekle ♡</button>
+        </p>
+      </div>
+
+      <div class="panel">
+        <h2>Today's little reminder ✨</h2>
+        <p>“Small steps every day lead to big changes.”</p>
+        <p class="muted">Her gün atılan küçük adımlar büyük değişimler getirir.</p>
+      </div>
+    </section>
+
+    <section id="add" hidden>
+      <div class="panel">
+        <h2>Yeni bir kelime ekle 🌷</h2>
+        <form id="wordForm">
+          <label for="english">İngilizce kelime *</label>
+          <input id="english" required maxlength="100"
+                 placeholder="Nevertheless">
+
+          <label for="turkish">Türkçe anlamı *</label>
+          <input id="turkish" required maxlength="200"
+                 placeholder="Buna rağmen">
+
+          <label for="example">Örnek cümle</label>
+          <textarea id="example" rows="3" maxlength="1000"
+                    placeholder="Nevertheless, we continued."></textarea>
+
+          <button type="submit">Kelimeyi kaydet ♡</button>
+        </form>
+        <p class="muted" style="font-size:13px">
+          Bu ilk sürüm kelimelerini kullandığın tarayıcıda saklar.
+        </p>
+      </div>
+    </section>
+
+    <section id="words" hidden>
+      <div class="panel">
+        <h2>My vocabulary book 📚</h2>
+        <input class="search" id="search"
+               placeholder="Kelime veya anlam ara...">
+        <div id="wordList"></div>
+      </div>
+    </section>
+
+    <section id="study" hidden>
+      <div class="panel" style="text-align:center">
+        <p class="muted">A little practice ♡</p>
+        <h2 id="quizWord">Kelime</h2>
+        <p id="quizHint">Anlamını hatırlıyor musun?</p>
+        <div id="quizMeaning" hidden class="meaning"></div>
+        <button id="reveal" onclick="revealMeaning()">Anlamı göster</button>
+        <div class="actions" style="justify-content:center">
+          <button onclick="nextQuestion()">Başka kelime ↻</button>
+          <button class="soft-button" onclick="markLearned()">Öğrendim ✓</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Made with love, just for me ♡</footer>
+
+  <script>
+    const STORAGE_KEY = "myLittleWorldWords";
+    let words = loadWords();
+    let currentId = null;
+
+    function loadWords() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function saveWords() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(words));
+      render();
+    }
+
+    function showSection(id) {
+      ["home", "add", "words", "study"].forEach(section => {
+        document.getElementById(section).hidden = section !== id;
+      });
+      if (id === "words") renderWords();
+      if (id === "home") updateStats();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("wordForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      words.unshift({
+        id: Date.now().toString(),
+        english: document.getElementById("english").value.trim(),
+        turkish: document.getElementById("turkish").value.trim(),
+        example: document.getElementById("example").value.trim(),
+        learned: false
+      });
+
+      saveWords();
+      event.target.reset();
+      showSection("words");
+    });
+
+    document.getElementById("search").addEventListener("input", renderWords);
+
+    function render() {
+      updateStats();
+      renderWords();
+    }
+
+    function updateStats() {
+      document.getElementById("total").textContent = words.length;
+      document.getElementById("learned").textContent =
+        words.filter(word => word.learned).length;
+    }
+
+    function renderWords() {
+      const list = document.getElementById("wordList");
+      const query = document.getElementById("search").value
+        .trim().toLocaleLowerCase("tr");
+
+      const filtered = words.filter(word =>
+        (word.english + " " + word.turkish)
+          .toLocaleLowerCase("tr").includes(query)
+      );
+
+      list.replaceChildren();
+
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = words.length
+          ? "Aramana uygun kelime bulamadık ♡"
+          : "Henüz kelimen yok. İlk kelimeni ekle! 🌷";
+        list.append(empty);
+        return;
+      }
+
+      filtered.forEach(word => {
+        const card = document.createElement("article");
+        card.className = "word-card";
+
+        const title = document.createElement("h3");
+        title.textContent = word.english;
+
+        const meaning = document.createElement("p");
+        meaning.textContent = word.turkish;
+
+        const example = document.createElement("p");
+        example.className = "muted";
+        example.textContent = word.example || "";
+
+        const status = document.createElement("p");
+        status.className = "muted";
+        status.textContent = word.learned ? "✓ Öğrendim" : "♡ Tekrar et";
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const toggle = document.createElement("button");
+        toggle.className = "soft-button";
+        toggle.textContent = word.learned
+          ? "Tekrar çalış" : "Öğrendim ✓";
+        toggle.onclick = () => {
+          word.learned = !word.learned;
+          saveWords();
+        };
+
+        const remove = document.createElement("button");
+        remove.className = "soft-button";
+        remove.textContent = "Sil";
+        remove.onclick = () => {
+          if (confirm("Bu kelimeyi silmek istiyor musun?")) {
+            words = words.filter(item => item.id !== word.id);
+            saveWords();
+          }
+        };
+
+        actions.append(toggle, remove);
+        card.append(title, meaning);
+        if (word.example) card.append(example);
+        card.append(status, actions);
+        list.append(card);
+      });
+    }
+
+    function studyRandom() {
+      if (!words.length) {
+        alert("Önce birkaç kelime ekleyelim! 🌸");
+        showSection("add");
+        return;
+      }
+
+      showSection("study");
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      if (!words.length) {
+        alert("Çalışmak için önce bir kelime ekle!");
+        showSection("add");
+        return;
+      }
+
+      const pool = words.filter(word => !word.learned);
+      const choices = pool.length ? pool : words;
+      const word = choices[Math.floor(Math.random() * choices.length)];
+
+      currentId = word.id;
+      document.getElementById("quizWord").textContent = word.english;
+      document.getElementById("quizHint").textContent =
+        "Türkçe anlamını hatırlamaya çalış ♡";
+      document.getElementById("quizMeaning").hidden = true;
+      document.getElementById("quizMeaning").textContent = word.turkish;
+      document.getElementById("reveal").hidden = false;
+    }
+
+    function revealMeaning() {
+      document.getElementById("quizMeaning").hidden = false;
+      document.getElementById("reveal").hidden = true;
+    }
+
+    function markLearned() {
+      const word = words.find(item => item.id === currentId);
+      if (!word) return;
+      word.learned = true;
+      saveWords();
+      nextQuestion();
+    }
+
+    render();
+  </script>
+</body>
+</html>
