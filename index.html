@@ -1,421 +1,913 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Little World ♡</title>
-  <style>
-    :root {
-      --pink: #f5dce5;
-      --rose: #b76e8b;
-      --cream: #fffaf6;
-      --ink: #604858;
-      --white: #ffffff;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--cream);
-      color: var(--ink);
-      font-family: "Trebuchet MS", Arial, sans-serif;
-    }
-
-    header {
-      padding: 25px 20px;
-      text-align: center;
-      background: var(--pink);
-    }
-
-    header h1 {
-      margin: 0;
-      font-family: Georgia, serif;
-      font-size: clamp(30px, 6vw, 46px);
-    }
-
-    header p { margin-bottom: 0; }
-
-    nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 14px;
-    }
-
-    button, input, textarea {
-      font: inherit;
-      border-radius: 12px;
-      padding: 12px;
-    }
-
-    button {
-      border: 0;
-      background: var(--rose);
-      color: white;
-      cursor: pointer;
-    }
-
-    button:hover { opacity: .85; }
-
-    .soft-button {
-      background: var(--pink);
-      color: var(--ink);
-    }
-
-    main {
-      width: min(760px, 92%);
-      margin: 10px auto 45px;
-    }
-
-    .welcome, .panel, .word-card {
-      background: var(--white);
-      border: 1px solid #f0e3e8;
-      border-radius: 22px;
-      padding: 22px;
-      margin-bottom: 18px;
-      box-shadow: 0 5px 18px #8d65700b;
-    }
-
-    .welcome {
-      background: linear-gradient(135deg, #fff0f4, #fffaf2);
-      text-align: center;
-      padding: 32px 20px;
-    }
-
-    h2 { font-family: Georgia, serif; }
-
-    .muted { color: #927b89; }
-
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-
-    .stat {
-      background: white;
-      padding: 13px 18px;
-      border-radius: 15px;
-    }
-
-    form {
-      display: grid;
-      gap: 10px;
-    }
-
-    input, textarea {
-      width: 100%;
-      border: 1px solid #e9d6df;
-      background: #fffdfd;
-      color: var(--ink);
-    }
-
-    textarea { resize: vertical; }
-
-    .search { margin-bottom: 15px; }
-
-    .word-card h3 {
-      font-size: 25px;
-      margin: 0 0 8px;
-    }
-
-    .meaning {
-      background: #fff4f7;
-      border-radius: 12px;
-      padding: 13px;
-      margin: 12px 0;
-    }
-
-    .actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .actions button { font-size: 14px; }
-
-    .empty {
-      text-align: center;
-      padding: 25px 10px;
-      color: #927b89;
-    }
-
-    footer {
-      text-align: center;
-      padding: 25px;
-      color: #927b89;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101515">
+<title>WORD//WAVE — English Lab</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#0d1111;--panel:#151c1c;--panel2:#1b2423;--line:#2a3937;--text:#eef7f5;--muted:#9aafab;--teal:#42e0c0;--teal2:#17bfa2;--danger:#ff7777;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% -15%,#153b36 0,transparent 38%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0}button:disabled{opacity:.45;cursor:not-allowed}
+.app{max-width:1250px;margin:auto;padding:24px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:15px;background:var(--teal);color:#07110f;display:grid;place-items:center;font-weight:950;font-size:20px;box-shadow:0 0 28px #42e0c022}.brand h1{font-size:21px;letter-spacing:1.5px;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:12px;letter-spacing:1.4px;text-transform:uppercase}.status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}.dot{height:8px;width:8px;background:var(--teal);border-radius:50%;display:inline-block}.layout{display:grid;grid-template-columns:225px minmax(0,1fr);gap:20px}.sidebar,.panel,.stat,.hero,.auth-card{background:linear-gradient(145deg,#17201f,#121818);border:1px solid var(--line);border-radius:var(--radius)}.sidebar{padding:12px;height:max-content;position:sticky;top:18px}.navbtn{display:flex;align-items:center;gap:11px;width:100%;padding:13px 14px;margin:3px 0;border-radius:12px;background:transparent;color:var(--muted);text-align:left;font-weight:650}.navbtn:hover,.navbtn.active{background:#20312e;color:var(--teal)}.navbtn span{width:22px;text-align:center}.side-note{margin:20px 9px 7px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}.main{min-width:0}.page{display:none}.page.active{display:block}.hero{padding:28px;margin-bottom:18px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:230px;height:230px;border:1px solid #42e0c021;border-radius:50%;right:-65px;top:-90px;box-shadow:0 0 0 30px #42e0c009,0 0 0 60px #42e0c006;pointer-events:none}.eyebrow{color:var(--teal);text-transform:uppercase;font-size:11px;font-weight:850;letter-spacing:2px}.hero h2{font-size:clamp(26px,4vw,42px);line-height:1.1;margin:9px 0 12px;max-width:650px}.hero p{max-width:620px;color:var(--muted);margin:0}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}.stat{padding:18px}.stat .num{font-size:28px;font-weight:850;color:var(--teal)}.stat .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}.panel{padding:22px;margin-bottom:18px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.panel h3{font-size:17px;margin:0}.muted{color:var(--muted)}.small{font-size:12px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;color:var(--muted);font-weight:700}.field input,.field textarea,.field select,.toolbar input,.toolbar select,.auth-card input{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:#0d1312;color:var(--text);outline:none}.field input:focus,.field textarea:focus,.field select:focus,.toolbar input:focus{border-color:var(--teal)}.field textarea{min-height:78px;resize:vertical}.btn{padding:11px 15px;border-radius:11px;font-weight:800;transition:.15s}.btn-primary{background:var(--teal);color:#071310}.btn-primary:hover{background:#74f2d8;transform:translateY(-1px)}.btn-secondary{background:#253330;color:var(--text);border:1px solid #344b46}.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}.btn-danger{background:#3b2022;color:#ffb1b1;border:1px solid #613437}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar input{flex:1;min-width:160px}.toolbar select{max-width:220px}.word-list{display:grid;gap:10px}.word-row{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;background:#101716;border:1px solid var(--line);border-radius:13px;padding:14px}.word-main{min-width:0}.word-main strong{font-size:17px}.word-main .meaning{color:var(--teal);margin-left:7px}.example{font-size:12px;color:var(--muted);margin-top:5px}.word-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.tag{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.7px;padding:4px 7px;border-radius:6px;background:#20332f;color:var(--teal);margin-top:7px}.tag.done{background:#28302f;color:#a5b5b1}.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.auth-wrap{max-width:510px;margin:8vh auto}.auth-card{padding:28px}.auth-card h2{margin:8px 0}.auth-card .field{margin:14px 0}.hidden{display:none!important}.set-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}.set-card{padding:17px;border:1px solid var(--line);background:#101716;border-radius:14px;cursor:pointer;text-align:left;color:var(--text)}.set-card:hover,.set-card.selected{border-color:var(--teal);background:#162522}.set-card strong{display:block;font-size:16px;margin-bottom:5px}.set-card small{color:var(--muted)}.study-card{text-align:center;padding:32px 20px;background:#101716;border:1px solid var(--line);border-radius:16px}.study-word{font-size:clamp(30px,6vw,48px);font-weight:900;margin:10px 0 16px;overflow-wrap:anywhere}.study-answer{font-size:22px;color:var(--teal);min-height:35px}.study-example{color:var(--muted);font-size:13px;margin-top:12px}.quiz-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px auto;max-width:620px}.quiz-options button{padding:14px;border-radius:12px;border:1px solid var(--line);background:#1a2422;color:var(--text)}.quiz-options button:hover{border-color:var(--teal)}.feedback{min-height:25px;text-align:center;font-weight:800;margin:12px}.feedback.good{color:var(--teal)}.feedback.bad{color:#ff8888}.game-area{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.game-tile{padding:16px;border:1px solid var(--line);border-radius:12px;background:#101716;color:var(--text);min-height:65px;overflow-wrap:anywhere}.game-tile.selected{border-color:var(--teal);background:#1d3832}.game-tile.matched{opacity:.4;border-color:#42e0c0;background:#14231f}.radio-card{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.radio-icon{width:58px;height:58px;border-radius:16px;background:var(--teal);color:#081310;display:grid;place-items:center;font-size:24px}.radio-meta{flex:1;min-width:150px}.radio-meta h3{margin:0 0 4px}.radio-meta p{margin:0;color:var(--muted);font-size:12px}.radio-controls{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.radio-controls audio{width:100%;margin-top:12px;height:40px}.footer{text-align:center;color:#61736f;font-size:11px;padding:18px}.toast{position:fixed;bottom:20px;right:20px;max-width:350px;padding:13px 16px;border-radius:12px;background:#20332f;border:1px solid #3a665d;color:var(--text);z-index:10;box-shadow:0 10px 35px #0008}.toast.error{background:#3a2021;border-color:#784044}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:4px;padding:8px}.navbtn{white-space:nowrap;width:auto;flex:0 0 auto;margin:0;padding:11px}.side-note{display:none}.app{padding:14px}.topbar{align-items:flex-start}.status{max-width:120px;text-align:right}.hero{padding:23px}.stats{gap:8px}.stat{padding:13px}.stat .num{font-size:24px}}
+@media(max-width:520px){.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:16px}.word-row{flex-direction:column}.word-actions{justify-content:flex-start}.quiz-options{grid-template-columns:1fr}.topbar{gap:10px}.brand h1{font-size:17px}.brand p{font-size:10px}.logo{width:42px;height:42px}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>My Little World ♡</h1>
-    <p>a little space to learn and grow 🌷</p>
-  </header>
+<div class="app">
+<header class="topbar">
+  <div class="brand"><div class="logo">W//</div><div><h1>WORD<span style="color:var(--teal)">//WAVE</span></h1><p>English learning lab</p></div></div>
+  <div class="status"><span class="dot"></span><span id="connectionStatus">Supabase bağlantısı hazırlanıyor</span></div>
+</header>
 
-  <nav>
-    <button onclick="showSection('home')">♡ Ana sayfa</button>
-    <button onclick="showSection('add')">＋ Kelime ekle</button>
-    <button onclick="showSection('words')">✿ Kelimelerim</button>
-    <button onclick="studyRandom()">♡ Kendimi test et</button>
-  </nav>
+<section id="authScreen" class="auth-wrap hidden">
+  <div class="auth-card">
+    <div class="eyebrow">Your personal vocabulary lab</div><h2>Giriş yap ve devam et.</h2>
+    <p class="muted">Kelimelerini güvenli şekilde hesabında sakla; farklı cihazlardan eriş.</p>
+    <div class="field"><label for="email">E-posta</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com"></div>
+    <div class="field"><label for="password">Şifre (en az 6 karakter)</label><input id="password" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <div class="actions"><button class="btn btn-primary" id="loginBtn">Giriş yap</button><button class="btn btn-secondary" id="signupBtn">Hesap oluştur</button></div>
+    <p class="muted small" id="authMessage">Hesap oluşturduğunda Supabase e-posta doğrulaması isteyebilir.</p>
+  </div>
+</section>
+<div id="appScreen" class="layout hidden">
+  <aside class="sidebar">
+    <button class="navbtn active" data-page="home"><span>⌂</span> Genel bakış</button>
+    <button class="navbtn" data-page="words"><span>▤</span> Kelimeler</button>
+    <button class="navbtn" data-page="sets"><span>▦</span> Kelime setleri</button>
+    <button class="navbtn" data-page="study"><span>✦</span> Çalışma modu</button>
+    <button class="navbtn" data-page="games"><span>⚡</span> Mini oyunlar</button>
+    <button class="navbtn" data-page="radio"><span>♫</span> Pop radyo</button>
+    <div class="side-note">WORD//WAVE<br>Small steps. Big vocabulary.</div>
+  </aside>
 
-  <main>
-    <section id="home">
-      <div class="welcome">
-        <div style="font-size:42px">🌸 📖 🌷</div>
-        <h2>Welcome to my little corner!</h2>
-        <p class="muted">
-          Her gün yeni bir kelime, kendin için küçük bir adım.
-        </p>
-        <div class="stats">
-          <div class="stat">
-            <strong id="total">0</strong><br>
-            <small>Kelime</small>
-          </div>
-          <div class="stat">
-            <strong id="learned">0</strong><br>
-            <small>Öğrendim</small>
+  <main class="main">
+    <section id="page-home" class="page active">
+      <div class="hero">
+        <div class="eyebrow">Welcome to your English lab</div>
+        <h2>Kelimelerini öğren.<br><span style="color:var(--teal)">Kendi ritminde ilerle.</span></h2>
+        <p>Kendi İngilizce kelime arşivini oluştur, setlere ayır ve oyunlarla öğrendiklerini pekiştir.</p>
+        <div class="actions">
+          <button class="btn btn-primary" data-goto="words">+ Kelime ekle</button>
+          <button class="btn btn-secondary" data-goto="study">Çalışmaya başla →</button>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num" id="statWords">0</div><div class="label">Toplam kelime</div></div>
+        <div class="stat"><div class="num" id="statLearned">0</div><div class="label">Öğrenilen</div></div>
+        <div class="stat"><div class="num" id="statSets">0</div><div class="label">Kelime seti</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Today's word</h3><span class="tag">Günün kelimesi</span></div>
+        <div id="dailyWord" class="empty">Kelimelerin yüklenmesi bekleniyor.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Hızlı test</h3><span class="muted small">Kendini dene</span></div>
+        <p class="muted">Rastgele bir kelime seçip Türkçe karşılığını tahmin et.</p>
+        <button id="quickQuizBtn" class="btn btn-primary">Mini testi başlat</button>
+        <div id="quickQuiz" class="hidden" style="margin-top:20px">
+          <div class="study-card">
+            <div class="eyebrow">What does this mean?</div>
+            <div id="quickPrompt" class="study-word"></div>
+            <div id="quickOptions" class="quiz-options"></div>
+            <div id="quickFeedback" class="feedback"></div>
+            <button id="quickNext" class="btn btn-secondary">Sonraki soru →</button>
           </div>
         </div>
-        <p style="margin-top:22px">
-          <button onclick="showSection('add')">İlk kelimemi ekle ♡</button>
-        </p>
-      </div>
-
-      <div class="panel">
-        <h2>Today's little reminder ✨</h2>
-        <p>“Small steps every day lead to big changes.”</p>
-        <p class="muted">Her gün atılan küçük adımlar büyük değişimler getirir.</p>
       </div>
     </section>
 
-    <section id="add" hidden>
+    <section id="page-words" class="page">
       <div class="panel">
-        <h2>Yeni bir kelime ekle 🌷</h2>
+        <div class="panel-head"><h3>Yeni kelime ekle</h3><span class="tag">Vocabulary</span></div>
         <form id="wordForm">
-          <label for="english">İngilizce kelime *</label>
-          <input id="english" required maxlength="100"
-                 placeholder="Nevertheless">
-
-          <label for="turkish">Türkçe anlamı *</label>
-          <input id="turkish" required maxlength="200"
-                 placeholder="Buna rağmen">
-
-          <label for="example">Örnek cümle</label>
-          <textarea id="example" rows="3" maxlength="1000"
-                    placeholder="Nevertheless, we continued."></textarea>
-
-          <button type="submit">Kelimeyi kaydet ♡</button>
+          <div class="form-grid">
+            <div class="field"><label for="wordEnglish">İngilizce kelime *</label><input id="wordEnglish" required placeholder="e.g. resilient"></div>
+            <div class="field"><label for="wordTurkish">Türkçe anlamı *</label><input id="wordTurkish" required placeholder="dayanıklı, dirençli"></div>
+            <div class="field full"><label for="wordExample">Örnek cümle (isteğe bağlı)</label><textarea id="wordExample" placeholder="She is a resilient person."></textarea></div>
+            <div class="field full"><label for="wordSet">Kelime seti</label><select id="wordSet"><option value="">Genel kelimeler</option></select></div>
+          </div>
+          <div class="actions"><button class="btn btn-primary" type="submit">Kelimeyi kaydet</button></div>
         </form>
-        <p class="muted" style="font-size:13px">
-          Bu ilk sürüm kelimelerini kullandığın tarayıcıda saklar.
-        </p>
       </div>
-    </section>
-
-    <section id="words" hidden>
       <div class="panel">
-        <h2>My vocabulary book 📚</h2>
-        <input class="search" id="search"
-               placeholder="Kelime veya anlam ara...">
-        <div id="wordList"></div>
+        <div class="panel-head"><h3>Kelime arşivim</h3><span class="muted small" id="wordCount">0 kelime</span></div>
+        <div class="toolbar">
+          <input id="wordSearch" placeholder="Kelime veya anlam ara...">
+          <select id="filterSet"><option value="all">Tüm setler</option></select>
+          <select id="filterLearned"><option value="all">Tüm durumlar</option><option value="yes">Öğrenildi</option><option value="no">Henüz öğrenilmedi</option></select>
+        </div>
+        <div id="wordList" class="word-list"><div class="empty">Kelimeler yükleniyor...</div></div>
       </div>
     </section>
 
-    <section id="study" hidden>
-      <div class="panel" style="text-align:center">
-        <p class="muted">A little practice ♡</p>
-        <h2 id="quizWord">Kelime</h2>
-        <p id="quizHint">Anlamını hatırlıyor musun?</p>
-        <div id="quizMeaning" hidden class="meaning"></div>
-        <button id="reveal" onclick="revealMeaning()">Anlamı göster</button>
-        <div class="actions" style="justify-content:center">
-          <button onclick="nextQuestion()">Başka kelime ↻</button>
-          <button class="soft-button" onclick="markLearned()">Öğrendim ✓</button>
+    <section id="page-sets" class="page">
+      <div class="panel">
+        <div class="panel-head"><h3>Yeni kelime seti oluştur</h3><span class="tag">Collections</span></div>
+        <form id="setForm">
+          <div class="form-grid">
+            <div class="field"><label for="setName">Set adı *</label><input id="setName" required placeholder="Travel English"></div>
+            <div class="field"><label for="setDescription">Açıklama</label><input id="setDescription" placeholder="Seyahat kelimeleri"></div>
+          </div>
+          <div class="actions"><button class="btn btn-primary" type="submit">Set oluştur</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Kelime setlerim</h3></div>
+        <div id="setList" class="set-grid"><div class="empty">Henüz set oluşturulmadı.</div></div>
+      </div>
+    </section>
+
+    <section id="page-study" class="page">
+      <div class="panel">
+        <div class="panel-head"><h3>Çalışma modu</h3><span class="tag">Study session</span></div>
+        <div class="form-grid">
+          <div class="field"><label for="studySet">Kelime seti</label><select id="studySet"><option value="all">Tüm kelimeler</option></select></div>
+          <div class="field"><label for="studyMode">Çalışma yöntemi</label><select id="studyMode"><option value="flash">İngilizce → Türkçe</option><option value="reverse">Türkçe → İngilizce</option><option value="choice">Çoktan seçmeli</option><option value="type">Cevabı yazarak</option></select></div>
+        </div>
+        <div class="actions"><button id="startStudy" class="btn btn-primary">Karıştır ve başla</button></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Kelime kartı</h3><span class="muted small" id="studyProgress">0 kelime hazır</span></div>
+        <div class="study-card">
+          <div class="eyebrow">Remember the meaning</div>
+          <div id="studyPrompt" class="study-word">Ready?</div>
+          <div id="studyAnswer" class="study-answer">Başlamak için kelime ekle.</div>
+          <div id="studyExample" class="study-example"></div>
+          <div id="studyChoices" class="quiz-options hidden"></div>
+          <div id="typeArea" class="hidden" style="max-width:500px;margin:15px auto">
+            <input id="typedAnswer" placeholder="Cevabını yaz..." style="width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#0d1312;color:var(--text)">
+            <button id="checkTyped" class="btn btn-primary" style="margin-top:10px">Cevabı kontrol et</button>
+          </div>
+          <div id="studyFeedback" class="feedback"></div>
+          <div class="actions" style="justify-content:center">
+            <button id="revealBtn" class="btn btn-secondary">Cevabı göster</button>
+            <button id="knownBtn" class="btn btn-primary">Öğrendim ✓</button>
+            <button id="nextStudy" class="btn btn-ghost">Sonraki →</button>
+          </div>
         </div>
       </div>
     </section>
+
+    <section id="page-games" class="page">
+      <div class="panel">
+        <div class="panel-head"><h3>Kelime eşleştirme</h3><span class="tag">Memory game</span></div>
+        <p class="muted">İngilizce kelimeyi doğru Türkçe karşılığıyla eşleştir.</p>
+        <div class="field" style="max-width:300px"><label for="gameSet">Kelime seti</label><select id="gameSet"><option value="all">Tüm kelimeler</option></select></div>
+        <div class="actions"><button id="startGame" class="btn btn-primary">Oyunu başlat</button><button id="nextGame" class="btn btn-secondary">Yeniden karıştır</button></div>
+        <div id="gameArea" class="game-area" style="margin-top:18px"></div>
+        <div id="gameFeedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <section id="page-radio" class="page">
+      <div class="panel">
+        <div class="panel-head"><h3>English pop radio</h3><span class="tag">Live stream</span></div>
+        <div class="radio-card">
+          <div class="radio-icon">♫</div>
+          <div class="radio-meta"><h3>PopTron</h3><p>İnternet üzerinden müzik yayını</p><p id="radioStatus">Yayın başlatılmaya hazır.</p></div>
+          <div class="radio-controls">
+            <button id="radioToggle" class="btn btn-primary">▶ Radyoyu aç</button>
+            <button id="radioStop" class="btn btn-ghost">Durdur</button>
+          </div>
+        </div>
+        <audio id="radioAudio" controls preload="none" src="https://ice.somafm.com/poptron"></audio>
+        <p class="muted small">Not: Yayının erişilebilirliği, internet bağlantısına ve yayın sağlayıcısına bağlıdır.</p>
+      </div>
+    </section>
+    <div class="footer">WORD//WAVE · Built for your daily progress</div>
   </main>
+</div>
+<div id="toast" class="toast hidden" role="status"></div>
+</div>
+<script>
+(() => {
+  const SUPABASE_URL = 'https://tywxxymoqohwffuykszb.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_iGd9d-8s0WZqyw1p9Sbzgg_g9zScJD9';
 
-  <footer>Made with love, just for me ♡</footer>
+  const $ = id => document.getElementById(id);
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  <script>
-    const STORAGE_KEY = "myLittleWorldWords";
-    let words = loadWords();
-    let currentId = null;
+  let user = null;
+  let words = [];
+  let sets = [];
+  let studyDeck = [];
+  let studyIndex = 0;
+  let currentStudyWord = null;
+  let studyRevealed = false;
+  let quickWord = null;
+  let gameCards = [];
+  let firstCard = null;
+  let lockGame = false;
+  let matchedCount = 0;
+  let toastTimer;
 
-    function loadWords() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      } catch {
-        return [];
-      }
+  function toast(message, error = false) {
+    const el = $('toast');
+    el.textContent = message;
+    el.classList.remove('hidden', 'error');
+    if (error) el.classList.add('error');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.add('hidden'), 3500);
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;',
+      '"': '&quot;', "'": '&#39;'
+    })[c]);
+  }
+
+  function shuffle(items) {
+    const a = [...items];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
     }
+    return a;
+  }
 
-    function saveWords() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(words));
-      render();
-    }
+  function showAuth(message = '') {
+    $('authScreen').classList.remove('hidden');
+    $('appScreen').classList.add('hidden');
+    $('authMessage').textContent = message ||
+      'Hesap oluşturduğunda e-posta doğrulaması istenebilir.';
+    $('connectionStatus').textContent = 'Giriş bekleniyor';
+  }
 
-    function showSection(id) {
-      ["home", "add", "words", "study"].forEach(section => {
-        document.getElementById(section).hidden = section !== id;
-      });
-      if (id === "words") renderWords();
-      if (id === "home") updateStats();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+  function showApp() {
+    $('authScreen').classList.add('hidden');
+    $('appScreen').classList.remove('hidden');
+    $('connectionStatus').textContent = 'Supabase bağlı';
+  }
 
-    document.getElementById("wordForm").addEventListener("submit", event => {
-      event.preventDefault();
+  async function loadData() {
+    if (!user) return;
 
-      words.unshift({
-        id: Date.now().toString(),
-        english: document.getElementById("english").value.trim(),
-        turkish: document.getElementById("turkish").value.trim(),
-        example: document.getElementById("example").value.trim(),
-        learned: false
-      });
+    const [setResult, wordResult] = await Promise.all([
+      db.from('word_sets').select('*').order('created_at', { ascending: false }),
+      db.from('words').select('*').order('created_at', { ascending: false })
+    ]);
 
-      saveWords();
-      event.target.reset();
-      showSection("words");
+    if (setResult.error) throw setResult.error;
+    if (wordResult.error) throw wordResult.error;
+
+    sets = setResult.data || [];
+    words = wordResult.data || [];
+
+    renderAll();
+  }
+
+  function renderAll() {
+    renderStats();
+    renderWords();
+    renderSets();
+    renderSetOptions();
+    renderDailyWord();
+  }
+
+  function renderStats() {
+    $('statWords').textContent = words.length;
+    $('statLearned').textContent = words.filter(w => w.learned).length;
+    $('statSets').textContent = sets.length;
+  }
+
+  function renderSetOptions() {
+    const selects = ['wordSet', 'filterSet', 'studySet', 'gameSet'];
+    selects.forEach(id => {
+      const el = $(id);
+      const old = el.value;
+      const firstLabel = id === 'filterSet' ? 'Tüm setler' :
+                         id === 'wordSet' ? 'Genel kelimeler' :
+                         'Tüm kelimeler';
+      const firstValue = id === 'filterSet' ? 'all' :
+                         id === 'wordSet' ? '' : 'all';
+
+      el.innerHTML = `<option value="${firstValue}">${firstLabel}</option>` +
+        sets.map(s =>
+          `<option value="${escapeHTML(s.id)}">${escapeHTML(s.name)}</option>`
+        ).join('');
+
+      if ([...el.options].some(o => o.value === old)) el.value = old;
+    });
+  }
+
+  function setName(id) {
+    return sets.find(s => String(s.id) === String(id))?.name || 'Genel kelimeler';
+  }
+
+  function renderWords() {
+    const search = $('wordSearch').value.trim().toLowerCase();
+    const setFilter = $('filterSet').value;
+    const learnedFilter = $('filterLearned').value;
+
+    const filtered = words.filter(w => {
+      const matchesSearch = !search ||
+        (w.english || '').toLowerCase().includes(search) ||
+        (w.turkish || '').toLowerCase().includes(search) ||
+        (w.example || '').toLowerCase().includes(search);
+
+      const matchesSet = setFilter === 'all' ||
+        String(w.set_id || '') === setFilter;
+
+      const matchesLearned = learnedFilter === 'all' ||
+        (learnedFilter === 'yes' ? w.learned : !w.learned);
+
+      return matchesSearch && matchesSet && matchesLearned;
     });
 
-    document.getElementById("search").addEventListener("input", renderWords);
+    $('wordCount').textContent = `${filtered.length} kelime`;
 
-    function render() {
-      updateStats();
-      renderWords();
+    if (!filtered.length) {
+      $('wordList').innerHTML =
+        '<div class="empty">Henüz kelime yok veya aramana uygun sonuç bulunamadı.</div>';
+      return;
     }
 
-    function updateStats() {
-      document.getElementById("total").textContent = words.length;
-      document.getElementById("learned").textContent =
-        words.filter(word => word.learned).length;
+    $('wordList').innerHTML = filtered.map(w => `
+      <div class="word-row">
+        <div class="word-main">
+          <strong>${escapeHTML(w.english)}</strong>
+          <span class="meaning">${escapeHTML(w.turkish)}</span>
+          ${w.example ? `<div class="example">${escapeHTML(w.example)}</div>` : ''}
+          <div><span class="tag">${escapeHTML(setName(w.set_id))}</span>
+          <span class="tag ${w.learned ? 'done' : ''}">${w.learned ? 'Öğrenildi' : 'Çalışılacak'}</span></div>
+        </div>
+        <div class="word-actions">
+          <button class="btn btn-ghost" data-action="toggle" data-id="${escapeHTML(w.id)}">${w.learned ? 'Geri al' : '✓ Öğrendim'}</button>
+          <button class="btn btn-danger" data-action="delete" data-id="${escapeHTML(w.id)}">Sil</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderSets() {
+    if (!sets.length) {
+      $('setList').innerHTML =
+        '<div class="empty">Henüz set oluşturmadın.</div>';
+      return;
     }
 
-    function renderWords() {
-      const list = document.getElementById("wordList");
-      const query = document.getElementById("search").value
-        .trim().toLocaleLowerCase("tr");
+    $('setList').innerHTML = sets.map(s => {
+      const count = words.filter(w => String(w.set_id) === String(s.id)).length;
+      return `
+        <div class="set-card">
+          <strong>${escapeHTML(s.name)}</strong>
+          <small>${escapeHTML(s.description || 'Açıklama yok')}</small>
+          <div class="tag">${count} kelime</div>
+          <div class="actions">
+            <button class="btn btn-secondary" data-action="study-set" data-id="${escapeHTML(s.id)}">Çalış</button>
+            <button class="btn btn-danger" data-action="delete-set" data-id="${escapeHTML(s.id)}">Sil</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
 
-      const filtered = words.filter(word =>
-        (word.english + " " + word.turkish)
-          .toLocaleLowerCase("tr").includes(query)
-      );
+  function renderDailyWord() {
+    if (!words.length) {
+      $('dailyWord').innerHTML = 'İlk kelimeni eklediğinde burada göreceksin.';
+      return;
+    }
 
-      list.replaceChildren();
+    const day = Math.floor(Date.now() / 86400000);
+    const w = words[day % words.length];
 
-      if (!filtered.length) {
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.textContent = words.length
-          ? "Aramana uygun kelime bulamadık ♡"
-          : "Henüz kelimen yok. İlk kelimeni ekle! 🌷";
-        list.append(empty);
+    $('dailyWord').innerHTML = `
+      <div class="study-word">${escapeHTML(w.english)}</div>
+      <div class="study-answer">${escapeHTML(w.turkish)}</div>
+      ${w.example ? `<div class="study-example">${escapeHTML(w.example)}</div>` : ''}
+    `;
+  }
+
+  async function addWord(event) {
+    event.preventDefault();
+    if (!user) return;
+
+    const english = $('wordEnglish').value.trim();
+    const turkish = $('wordTurkish').value.trim();
+    const example = $('wordExample').value.trim();
+    const setId = $('wordSet').value || null;
+
+    if (!english || !turkish) {
+      toast('İngilizce kelime ve Türkçe anlamı gerekli.', true);
+      return;
+    }
+
+    const result = await db.from('words').insert({
+      user_id: user.id,
+      english,
+      turkish,
+      example,
+      set_id: setId,
+      learned: false
+    });
+
+    if (result.error) {
+      toast('Kelime kaydedilemedi: ' + result.error.message, true);
+      return;
+    }
+
+    $('wordForm').reset();
+    await loadData();
+    toast('Kelime başarıyla kaydedildi!');
+  }
+
+  async function addSet(event) {
+    event.preventDefault();
+    if (!user) return;
+
+    const name = $('setName').value.trim();
+    const description = $('setDescription').value.trim();
+
+    if (!name) return;
+
+    const result = await db.from('word_sets').insert({
+      user_id: user.id,
+      name,
+      description
+    });
+
+    if (result.error) {
+      toast('Set oluşturulamadı: ' + result.error.message, true);
+      return;
+    }
+
+    $('setForm').reset();
+    await loadData();
+    toast('Kelime seti oluşturuldu!');
+  }
+
+  async function toggleLearned(id) {
+    const w = words.find(x => String(x.id) === String(id));
+    if (!w) return;
+
+    const result = await db.from('words')
+      .update({ learned: !w.learned })
+      .eq('id', w.id)
+      .eq('user_id', user.id);
+
+    if (result.error) {
+      toast('Güncelleme başarısız: ' + result.error.message, true);
+      return;
+    }
+
+    await loadData();
+  }
+
+  async function deleteWord(id) {
+    if (!confirm('Bu kelimeyi silmek istediğine emin misin?')) return;
+
+    const result = await db.from('words')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (result.error) {
+      toast('Kelime silinemedi: ' + result.error.message, true);
+      return;
+    }
+
+    await loadData();
+    toast('Kelime silindi.');
+  }
+
+  async function deleteSet(id) {
+    if (!confirm('Bu set silinsin mi? İçindeki kelimeler korunur ve genel kelimelere geçer.')) return;
+
+    const moveResult = await db.from('words')
+      .update({ set_id: null })
+      .eq('set_id', id)
+      .eq('user_id', user.id);
+
+    if (moveResult.error) {
+      toast('Set kelimeleri güncellenemedi: ' + moveResult.error.message, true);
+      return;
+    }
+
+    const result = await db.from('word_sets')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (result.error) {
+      toast('Set silinemedi: ' + result.error.message, true);
+      return;
+    }
+
+    await loadData();
+    toast('Set silindi, kelimelerin korundu.');
+  }
+
+  function getStudyWords() {
+    const setId = $('studySet').value;
+    return shuffle(words.filter(w => setId === 'all' || String(w.set_id || '') === setId));
+  }
+
+  function startStudy() {
+    studyDeck = getStudyWords();
+    studyIndex = 0;
+    if (!studyDeck.length) {
+      toast('Önce bu çalışma için kelime ekle.', true);
+      return;
+    }
+    showStudyCard();
+  }
+
+  function showStudyCard() {
+    if (studyIndex >= studyDeck.length) {
+      $('studyPrompt').textContent = 'Tebrikler!';
+      $('studyAnswer').textContent = 'Bu tur tamamlandı.';
+      $('studyExample').textContent = '';
+      $('studyChoices').classList.add('hidden');
+      $('typeArea').classList.add('hidden');
+      $('studyProgress').textContent = `${studyDeck.length} kelime tamamlandı`;
+      $('studyFeedback').textContent = '';
+      currentStudyWord = null;
+      return;
+    }
+
+    currentStudyWord = studyDeck[studyIndex];
+    studyRevealed = false;
+    const mode = $('studyMode').value;
+
+    $('studyProgress').textContent = `${studyIndex + 1} / ${studyDeck.length}`;
+    $('studyPrompt').textContent = mode === 'reverse'
+      ? currentStudyWord.turkish : currentStudyWord.english;
+    $('studyAnswer').textContent = 'Cevabı düşün...';
+    $('studyExample').textContent = '';
+    $('studyFeedback').textContent = '';
+    $('studyFeedback').className = 'feedback';
+    $('studyChoices').classList.add('hidden');
+    $('typeArea').classList.add('hidden');
+    $('typedAnswer').value = '';
+
+    if (mode === 'choice') {
+      $('studyChoices').classList.remove('hidden');
+      const options = shuffle([
+        currentStudyWord,
+        ...shuffle(words.filter(w => w.id !== currentStudyWord.id)).slice(0, 3)
+      ]);
+
+      $('studyChoices').innerHTML = options.map(w =>
+        `<button class="btn btn-secondary" data-choice="${escapeHTML(w.id)}">${escapeHTML(w.turkish)}</button>`
+      ).join('');
+      $('studyAnswer').textContent = 'Doğru Türkçe anlamı seç.';
+    } else if (mode === 'type') {
+      $('typeArea').classList.remove('hidden');
+      $('studyAnswer').textContent = 'Türkçe anlamını yaz.';
+    }
+  }
+
+  function revealStudy() {
+    if (!currentStudyWord) return;
+    studyRevealed = true;
+    const mode = $('studyMode').value;
+
+    $('studyAnswer').textContent = mode === 'reverse'
+      ? currentStudyWord.english : currentStudyWord.turkish;
+    $('studyExample').textContent = currentStudyWord.example || '';
+  }
+
+  async function markCurrentLearned() {
+    if (!currentStudyWord) return;
+    const id = currentStudyWord.id;
+
+    const result = await db.from('words')
+      .update({ learned: true })
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (result.error) {
+      toast('Kelime güncellenemedi: ' + result.error.message, true);
+      return;
+    }
+
+    await loadData();
+    studyIndex++;
+    showStudyCard();
+  }
+
+  function checkTypedAnswer() {
+    if (!currentStudyWord) return;
+    const answer = $('typedAnswer').value.trim().toLowerCase();
+    const expected = $('studyMode').value === 'reverse'
+      ? currentStudyWord.english.toLowerCase()
+      : currentStudyWord.turkish.toLowerCase();
+
+    const correct = answer === expected;
+    $('studyFeedback').textContent = correct
+      ? 'Doğru cevap! ✓' : `Doğru cevap: ${expected}`;
+    $('studyFeedback').className = 'feedback ' + (correct ? 'good' : 'bad');
+    revealStudy();
+  }
+
+  function nextStudy() {
+    studyIndex++;
+    showStudyCard();
+  }
+
+  function startQuickQuiz() {
+    if (words.length < 2) {
+      toast('Mini test için en az 2 kelime ekle.', true);
+      return;
+    }
+
+    $('quickQuiz').classList.remove('hidden');
+    quickWord = words[Math.floor(Math.random() * words.length)];
+
+    $('quickPrompt').textContent = quickWord.english;
+    $('quickFeedback').textContent = '';
+    const options = shuffle([
+      quickWord,
+      ...shuffle(words.filter(w => w.id !== quickWord.id)).slice(0, 3)
+    ]);
+
+    $('quickOptions').innerHTML = options.map(w =>
+      `<button data-quick="${escapeHTML(w.id)}">${escapeHTML(w.turkish)}</button>`
+    ).join('');
+  }
+
+  function startGame() {
+    const setId = $('gameSet').value;
+    const pool = words.filter(w => setId === 'all' || String(w.set_id || '') === setId);
+
+    if (pool.length < 2) {
+      toast('Eşleştirme için en az 2 kelime gerekli.', true);
+      return;
+    }
+
+    const chosen = shuffle(pool).slice(0, Math.min(6, pool.length));
+    gameCards = shuffle(chosen.flatMap(w => [
+      { id: String(w.id), side: 'en', label: w.english },
+      { id: String(w.id), side: 'tr', label: w.turkish }
+    ]));
+
+    firstCard = null;
+    lockGame = false;
+    matchedCount = 0;
+    $('gameFeedback').textContent = 'Aynı kelimenin İngilizce ve Türkçe karşılığını bul.';
+    renderGame();
+  }
+
+  function renderGame() {
+    $('gameArea').innerHTML = gameCards.map((c, i) => `
+      <button class="game-tile ${c.matched ? 'matched' : ''} ${c.selected ? 'selected' : ''}"
+        data-game-index="${i}" ${c.matched ? 'disabled' : ''}>
+        ${c.matched || c.selected ? escapeHTML(c.label) : '？'}
+      </button>
+    `).join('');
+  }
+
+  function chooseGameCard(index) {
+    if (lockGame) return;
+    const card = gameCards[index];
+    if (!card || card.matched || card.selected) return;
+
+    card.selected = true;
+
+    if (!firstCard) {
+      firstCard = index;
+      renderGame();
+      return;
+    }
+
+    const first = gameCards[firstCard];
+    renderGame();
+
+    if (first.id === card.id && first.side !== card.side) {
+      first.matched = true;
+      card.matched = true;
+      first.selected = false;
+      card.selected = false;
+      matchedCount++;
+      firstCard = null;
+      renderGame();
+
+      if (matchedCount === gameCards.length / 2) {
+        $('gameFeedback').textContent = 'Harika! Tüm eşleştirmeleri buldun! ✓';
+        toast('Oyunu tamamladın!');
+      } else {
+        $('gameFeedback').textContent = 'Doğru eşleşme! ✓';
+      }
+    } else {
+      lockGame = true;
+      $('gameFeedback').textContent = 'Bu ikili eşleşmedi. Tekrar dene.';
+      const oldFirst = firstCard;
+      setTimeout(() => {
+        gameCards[oldFirst].selected = false;
+        gameCards[index].selected = false;
+        firstCard = null;
+        lockGame = false;
+        renderGame();
+      }, 850);
+    }
+  }
+
+  function navigate(page) {
+    document.querySelectorAll('.navbtn').forEach(b =>
+      b.classList.toggle('active', b.dataset.page === page)
+    );
+    document.querySelectorAll('.page').forEach(p =>
+      p.classList.toggle('active', p.id === 'page-' + page)
+    );
+  }
+
+  $('loginBtn').addEventListener('click', async () => {
+    const email = $('email').value.trim();
+    const password = $('password').value;
+
+    if (!email || !password) {
+      $('authMessage').textContent = 'E-posta ve şifreni gir.';
+      return;
+    }
+
+    $('loginBtn').disabled = true;
+    const { error } = await db.auth.signInWithPassword({ email, password });
+    $('loginBtn').disabled = false;
+
+    if (error) $('authMessage').textContent = error.message;
+  });
+
+  $('signupBtn').addEventListener('click', async () => {
+    const email = $('email').value.trim();
+    const password = $('password').value;
+
+    if (!email || password.length < 6) {
+      $('authMessage').textContent = 'E-posta gir ve en az 6 karakterli bir şifre seç.';
+      return;
+    }
+
+    $('signupBtn').disabled = true;
+    const { data, error } = await db.auth.signUp({ email, password });
+    $('signupBtn').disabled = false;
+
+    if (error) {
+      $('authMessage').textContent = error.message;
+    } else if (!data.session) {
+      $('authMessage').textContent =
+        'Hesap oluşturuldu. E-postana gelen doğrulama bağlantısına tıkla, sonra giriş yap.';
+    } else {
+      $('authMessage').textContent = 'Hesabın oluşturuldu.';
+    }
+  });
+
+  $('wordForm').addEventListener('submit', addWord);
+  $('setForm').addEventListener('submit', addSet);
+
+  $('wordSearch').addEventListener('input', renderWords);
+  $('filterSet').addEventListener('change', renderWords);
+  $('filterLearned').addEventListener('change', renderWords);
+
+  $('wordList').addEventListener('click', async event => {
+    const btn = event.target.closest('button[data-action]');
+    if (!btn) return;
+    if (btn.dataset.action === 'toggle') await toggleLearned(btn.dataset.id);
+    if (btn.dataset.action === 'delete') await deleteWord(btn.dataset.id);
+  });
+
+  $('setList').addEventListener('click', async event => {
+    const btn = event.target.closest('button[data-action]');
+    if (!btn) return;
+
+    if (btn.dataset.action === 'delete-set') {
+      await deleteSet(btn.dataset.id);
+    }
+
+    if (btn.dataset.action === 'study-set') {
+      $('studySet').value = btn.dataset.id;
+      navigate('study');
+      startStudy();
+    }
+  });
+
+  $('startStudy').addEventListener('click', startStudy);
+  $('revealBtn').addEventListener('click', revealStudy);
+  $('nextStudy').addEventListener('click', nextStudy);
+  $('knownBtn').addEventListener('click', markCurrentLearned);
+  $('checkTyped').addEventListener('click', checkTypedAnswer);
+
+  $('typedAnswer').addEventListener('keydown', event => {
+    if (event.key === 'Enter') checkTypedAnswer();
+  });
+
+  $('studyChoices').addEventListener('click', event => {
+    const btn = event.target.closest('button[data-choice]');
+    if (!btn || !currentStudyWord) return;
+
+    const correct = String(currentStudyWord.id) === btn.dataset.choice;
+    $('studyFeedback').textContent = correct ? 'Doğru cevap! ✓' : 'Yanlış cevap, tekrar deneyebilirsin.';
+    $('studyFeedback').className = 'feedback ' + (correct ? 'good' : 'bad');
+    revealStudy();
+  });
+
+  $('quickQuizBtn').addEventListener('click', startQuickQuiz);
+  $('quickNext').addEventListener('click', startQuickQuiz);
+
+  $('quickOptions').addEventListener('click', event => {
+    const btn = event.target.closest('button[data-quick]');
+    if (!btn || !quickWord) return;
+
+    const correct = String(quickWord.id) === btn.dataset.quick;
+    $('quickFeedback').textContent = correct
+      ? 'Doğru cevap! ✓' : `Doğru cevap: ${quickWord.turkish}`;
+    $('quickFeedback').className = 'feedback ' + (correct ? 'good' : 'bad');
+  });
+
+  $('startGame').addEventListener('click', startGame);
+  $('nextGame').addEventListener('click', startGame);
+
+  $('gameArea').addEventListener('click', event => {
+    const btn = event.target.closest('button[data-game-index]');
+    if (btn) chooseGameCard(Number(btn.dataset.gameIndex));
+  });
+
+  document.querySelectorAll('.navbtn').forEach(btn => {
+    btn.addEventListener('click', () => navigate(btn.dataset.page));
+  });
+
+  document.querySelectorAll('[data-goto]').forEach(btn => {
+    btn.addEventListener('click', () => navigate(btn.dataset.goto));
+  });
+
+  $('radioToggle').addEventListener('click', async () => {
+    const audio = $('radioAudio');
+
+    if (!audio.paused) {
+      audio.pause();
+      $('radioToggle').textContent = '▶ Radyoyu aç';
+      $('radioStatus').textContent = 'Yayın duraklatıldı.';
+      return;
+    }
+
+    try {
+      await audio.play();
+      $('radioToggle').textContent = 'Ⅱ Duraklat';
+      $('radioStatus').textContent = 'Yayın oynatılıyor.';
+    } catch {
+      $('radioStatus').textContent = 'Yayın açılamadı. İnternet bağlantısını veya yayın adresini kontrol et.';
+      toast('Radyo başlatılamadı.', true);
+    }
+  });
+
+  $('radioStop').addEventListener('click', () => {
+    const audio = $('radioAudio');
+    audio.pause();
+    audio.currentTime = 0;
+    $('radioToggle').textContent = '▶ Radyoyu aç';
+    $('radioStatus').textContent = 'Yayın durduruldu.';
+  });
+
+  $('radioAudio').addEventListener('error', () => {
+    $('radioStatus').textContent = 'Yayın bağlantısı şu anda kullanılamıyor.';
+  });
+
+  async function boot() {
+    $('connectionStatus').textContent = 'Supabase bağlantısı kontrol ediliyor...';
+
+    const { data, error } = await db.auth.getSession();
+
+    if (error) {
+      showAuth('Oturum kontrol edilemedi: ' + error.message);
+      return;
+    }
+
+    user = data.session?.user || null;
+
+    if (user) {
+      showApp();
+      try {
+        await loadData();
+      } catch (err) {
+        toast('Veriler yüklenemedi: ' + err.message, true);
+      }
+    } else {
+      showAuth();
+    }
+
+    db.auth.onAuthStateChange(async (_event, session) => {
+      user = session?.user || null;
+
+      if (!user) {
+        showAuth();
+        words = [];
+        sets = [];
         return;
       }
 
-      filtered.forEach(word => {
-        const card = document.createElement("article");
-        card.className = "word-card";
-
-        const title = document.createElement("h3");
-        title.textContent = word.english;
-
-        const meaning = document.createElement("p");
-        meaning.textContent = word.turkish;
-
-        const example = document.createElement("p");
-        example.className = "muted";
-        example.textContent = word.example || "";
-
-        const status = document.createElement("p");
-        status.className = "muted";
-        status.textContent = word.learned ? "✓ Öğrendim" : "♡ Tekrar et";
-
-        const actions = document.createElement("div");
-        actions.className = "actions";
-
-        const toggle = document.createElement("button");
-        toggle.className = "soft-button";
-        toggle.textContent = word.learned
-          ? "Tekrar çalış" : "Öğrendim ✓";
-        toggle.onclick = () => {
-          word.learned = !word.learned;
-          saveWords();
-        };
-
-        const remove = document.createElement("button");
-        remove.className = "soft-button";
-        remove.textContent = "Sil";
-        remove.onclick = () => {
-          if (confirm("Bu kelimeyi silmek istiyor musun?")) {
-            words = words.filter(item => item.id !== word.id);
-            saveWords();
-          }
-        };
-
-        actions.append(toggle, remove);
-        card.append(title, meaning);
-        if (word.example) card.append(example);
-        card.append(status, actions);
-        list.append(card);
-      });
-    }
-
-    function studyRandom() {
-      if (!words.length) {
-        alert("Önce birkaç kelime ekleyelim! 🌸");
-        showSection("add");
-        return;
+      showApp();
+      try {
+        await loadData();
+      } catch (err) {
+        toast('Veriler yüklenemedi: ' + err.message, true);
       }
+    });
+  }
 
-      showSection("study");
-      nextQuestion();
-    }
-
-    function nextQuestion() {
-      if (!words.length) {
-        alert("Çalışmak için önce bir kelime ekle!");
-        showSection("add");
-        return;
-      }
-
-      const pool = words.filter(word => !word.learned);
-      const choices = pool.length ? pool : words;
-      const word = choices[Math.floor(Math.random() * choices.length)];
-
-      currentId = word.id;
-      document.getElementById("quizWord").textContent = word.english;
-      document.getElementById("quizHint").textContent =
-        "Türkçe anlamını hatırlamaya çalış ♡";
-      document.getElementById("quizMeaning").hidden = true;
-      document.getElementById("quizMeaning").textContent = word.turkish;
-      document.getElementById("reveal").hidden = false;
-    }
-
-    function revealMeaning() {
-      document.getElementById("quizMeaning").hidden = false;
-      document.getElementById("reveal").hidden = true;
-    }
-
-    function markLearned() {
-      const word = words.find(item => item.id === currentId);
-      if (!word) return;
-      word.learned = true;
-      saveWords();
-      nextQuestion();
-    }
-
-    render();
-  </script>
+  boot();
+})();
+</script>
 </body>
 </html>
